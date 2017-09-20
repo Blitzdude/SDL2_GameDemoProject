@@ -7,22 +7,19 @@ int main(int argc, char* args[])
 	Game gm;
 
 	if (!gm.init()) {
+		printf("Failed to initialize");
+	}
+	else {
+
 		gm.createWindow();
 
-		//Get window surface
-		gm.screenSurface = SDL_GetWindowSurface(gm.window);
-
-		//Fill the surface white
-		SDL_FillRect(gm.screenSurface, NULL, SDL_MapRGB(gm.screenSurface->format,
-														0xFF, 0xFF, 0xFF));
-
+		
 		//Update the surface
-		SDL_UpdateWindowSurface(gm.window);
+		gm.updateWindow();
 
 		//Wait two seconds
-		SDL_Delay(2000);
-		return true;
-
+		SDL_Delay(3000);
+		
 		gm.closeGame();
 	}
 

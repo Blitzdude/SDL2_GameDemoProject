@@ -12,7 +12,6 @@ Game::~Game()
 }
 
 
-
 bool Game::init()
 {
 	//Initialize SDL
@@ -22,6 +21,22 @@ bool Game::init()
 		return false;
 	}
 	return true;
+}
+
+bool Game::loadMedia()
+{
+	//Loading success flag
+	bool success = true;
+
+	//Load splash image
+	image = SDL_LoadBMP("02_getting_an_image_on_the_screen/hello_world.bmp");
+	if (image == NULL)
+	{
+		printf("Unable to load image %s! SDL Error: %s\n", "02_getting_an_image_on_the_screen/hello_world.bmp", SDL_GetError());
+		success = false;
+	}
+
+	return success;
 }
 
 
@@ -39,6 +54,15 @@ bool Game::createWindow()
 
 void Game::updateWindow()
 {
+	//Get window surface
+	screenSurface = SDL_GetWindowSurface(window);
+
+	//Fill the surface white
+	SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format,
+		0xFF, 0xFF, 0xFF));
+
+	//Update the surface
+	SDL_UpdateWindowSurface(window);
 }
 
 void Game::closeGame()

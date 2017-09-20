@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
