@@ -20,6 +20,7 @@ public:
 	
 	bool init();
 	bool loadMedia();
+	SDL_Surface* loadSurface(std::string path);
 	bool createWindow();
 	void updateWindow();
 	void closeGame();
