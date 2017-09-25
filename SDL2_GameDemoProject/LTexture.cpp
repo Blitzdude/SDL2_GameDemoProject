@@ -8,14 +8,13 @@ LTexture::LTexture()
 	height = 0;
 }
 
-
 LTexture::~LTexture()
 {
 	//Deallocate
 	free();
 }
 
-bool LTexture::loadFromFile(std::string path)
+SDL_Texture* LTexture::loadFromFile(std::string path)
 {
 	//Get rid of preexisting texture
 	free();
@@ -28,6 +27,7 @@ bool LTexture::loadFromFile(std::string path)
 	if (loadedSurface == NULL)
 	{
 		printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+		return NULL;
 	}
 	else
 	{
@@ -39,6 +39,7 @@ bool LTexture::loadFromFile(std::string path)
 		if (newTexture == NULL)
 		{
 			printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+			return NULL;
 		}
 		else
 		{
@@ -53,7 +54,7 @@ bool LTexture::loadFromFile(std::string path)
 
 	//Return success
 	texture = newTexture;
-	return texture != NULL;
+	return texture;
 }
 
 void LTexture::free()
@@ -67,7 +68,6 @@ void LTexture::free()
 		height = 0;
 	}
 }
-
 
 void LTexture::render(int x, int y)
 {

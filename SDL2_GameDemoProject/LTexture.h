@@ -1,5 +1,5 @@
 #pragma once
-#include "Game.h"
+#include "Global.h"
 class LTexture
 {
 
@@ -11,7 +11,7 @@ public:
 	~LTexture();
 
 	//Loads image at specified path
-	bool loadFromFile(std::string path);
+	SDL_Texture* loadFromFile(std::string path);
 
 	//Deallocates texture
 	void free();

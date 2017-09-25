@@ -13,13 +13,15 @@ int main(int argc, char* args[])
 	Player player1(0,0);
 
 	// initialize and create window
-	if (!gm.init()) {
+	if (!gm.init()) 
+	{
 		printf("Unable to initialize!\n");
 	}
 	else
 	{
 		// load media
-		if (!gm.loadMedia()) {
+		if (!gm.loadMedia()) 
+		{
 			printf("Unable to load media!\n");
 		}
 		else {
@@ -30,20 +32,22 @@ int main(int argc, char* args[])
 			SDL_Event e;
 
 			//Main game loop
-			while (running) {
+			while (running) 
+			{
 
 				// handle events
-				while (SDL_PollEvent(&e) != 0) {
+				while (SDL_PollEvent(&e) != 0) 
+				{
 
 					//user quits
-					if (e.type == SDL_QUIT) {
+					if (e.type == SDL_QUIT) 
+					{
 						running = false;
-					}
-					
+					}	
 				}
 
 				//Update the window
-				gm.updateWindow();
+				gm.updateWindow(player1);
 
 			} // Game loop end
 		}
@@ -51,6 +55,6 @@ int main(int argc, char* args[])
 
 
 	// QUIT SDL
-	gm.closeGame();
+	gm.closeGame(&player1);
 	return 0;
 }

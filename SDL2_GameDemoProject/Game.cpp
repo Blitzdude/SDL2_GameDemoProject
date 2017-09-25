@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "Player.h"
+
 
 
 Game::Game()
@@ -82,36 +82,23 @@ bool Game::loadMedia()
 		printf("Failed to load background texture image!\n");
 		success = false;
 	}
-
+	// Player texture is loaded during constructor
 	return success;
 }
 
-SDL_Surface * Game::loadFromFile(std::string path)
+bool Game::loadMedia(std::string path)
 {
+	//Loading success flag
+	bool success = true;
 
-	//The final optimized image
-	SDL_Surface* optimizedSurface = NULL;
-
-	//Load image at specified path
-	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-	if (loadedSurface == NULL)
+	//Load background texture
+	if (!backgroundTexture.loadFromFile("10_color_keying/background.png"))
 	{
-		printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
-	}
-	else
-	{
-		//Convert surface to screen format
-		optimizedSurface = SDL_ConvertSurface(loadedSurface, screenSurface->format, NULL);
-		if (optimizedSurface == NULL)
-		{
-			printf("Unable to optimize image %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
-		}
-
-		//Get rid of old loaded surface
-		SDL_FreeSurface(loadedSurface);
+		printf("Failed to load background texture image!\n");
+		success = false;
 	}
 
-	return optimizedSurface;
+	return success;
 }
 
 
@@ -132,7 +119,7 @@ bool Game::createWindow()
 
 
 
-void Game::updateWindow()
+void Game::updateWindow(Player &p)
 {
 	//Get window surface
 	screenSurface = SDL_GetWindowSurface(window);
@@ -146,16 +133,16 @@ void Game::updateWindow()
 	backgroundTexture.render(0, 0);
 
 	//Render Foo' to the screen
-	playerTexture.render(240, 190);
+	p.render(240, 190);
 
 	//Update screen
 	SDL_RenderPresent(renderer);
 }
 
-void Game::closeGame()
+void Game::closeGame(Player* player)
 {
 	//Free loaded images
-	playerTexture.free();
+	player->free();
 	backgroundTexture.free();
 
 	//Destroy window	

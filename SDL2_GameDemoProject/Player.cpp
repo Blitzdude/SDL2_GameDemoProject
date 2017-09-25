@@ -4,10 +4,12 @@ Player::Player(int x, int y)
 {
 	xPosition = x;
 	yPosition = y;
-	playerTexture = loadFromFile(imagePath);
-
+	texture = loadFromFile(imagePath);
+	if (texture == NULL) 
+	{
+		printf("Couldn't load player texture!\n");
+	}
 }
-
 
 Player::~Player()
 {
