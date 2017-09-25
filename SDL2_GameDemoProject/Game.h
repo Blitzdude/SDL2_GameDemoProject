@@ -13,15 +13,27 @@ public:
 	//The surface contained by the window
 	SDL_Surface* screenSurface = NULL;
 
-	SDL_Surface* image = NULL;
+	//PNG image surface
+	SDL_Surface* backgroundSurface = NULL;
 
-	Game();
-	~Game();
 	
+	
+
+	//Event handler
+	SDL_Event eventHandler;
+
+	//Scene texture
+	LTexture backgroundTexture;
+
+	Game(); // Constructor
+	~Game(); // destructor
+	
+	// Method
 	bool init();
 	bool loadMedia();
-	SDL_Surface* loadSurface(std::string path);
+	SDL_Surface* loadFromFile(std::string path);
 	bool createWindow();
+	
 	void updateWindow();
 	void closeGame();
 };

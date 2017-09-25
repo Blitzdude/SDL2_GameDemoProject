@@ -25,8 +25,19 @@ bool Game::init()
 	}
 	else
 	{
+		//Set texture filtering to linear
+		if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
+		{
+			printf("Warning: Linear texture filtering not enabled!");
+		}
+
 		//Create window
-		window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		window = SDL_CreateWindow(
+			"SDL Tutorial", 
+			SDL_WINDOWPOS_UNDEFINED,
+			SDL_WINDOWPOS_UNDEFINED,
+			SCREEN_WIDTH, SCREEN_HEIGHT, 
+			SDL_WINDOW_SHOWN);
 		if (window == NULL)
 		{
 			printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
@@ -34,17 +45,25 @@ bool Game::init()
 		}
 		else
 		{
-			//Initialize PNG loading
-			int imgFlags = IMG_INIT_PNG;
-			if (!(IMG_Init(imgFlags) & imgFlags))
+			//Create renderer for window
+			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+			if (renderer == NULL)
 			{
-				printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+				printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
 				success = false;
 			}
 			else
 			{
-				//Get window surface
-				screenSurface = SDL_GetWindowSurface(window);
+				//Initialize renderer color
+				SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
+				//Initialize PNG loading
+				int imgFlags = IMG_INIT_PNG;
+				if (!(IMG_Init(imgFlags) & imgFlags))
+				{
+					printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+					success = false;
+				}
 			}
 		}
 	}
@@ -57,18 +76,17 @@ bool Game::loadMedia()
 	//Loading success flag
 	bool success = true;
 
-	//Load PNG surface
-	gPNGSurface = loadSurface();
-	if (gPNGSurface == NULL)
+	//Load background texture
+	if (!backgroundTexture.loadFromFile("resources/background.png"))
 	{
-		printf("Failed to load PNG image!\n");
+		printf("Failed to load background texture image!\n");
 		success = false;
 	}
 
 	return success;
 }
 
-SDL_Surface * Game::loadSurface(std::string path)
+SDL_Surface * Game::loadFromFile(std::string path)
 {
 
 	//The final optimized image
@@ -97,13 +115,14 @@ SDL_Surface * Game::loadSurface(std::string path)
 }
 
 
-
-
-
 bool Game::createWindow()
 {
 	//Create window
-	window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("SDL Tutorial",
+								SDL_WINDOWPOS_UNDEFINED, 
+								SDL_WINDOWPOS_UNDEFINED, 
+								SCREEN_WIDTH, SCREEN_HEIGHT, 
+								SDL_WINDOW_SHOWN);
 	if (window == NULL)
 	{
 		printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -111,25 +130,43 @@ bool Game::createWindow()
 	}	
 }
 
+
+
 void Game::updateWindow()
 {
 	//Get window surface
 	screenSurface = SDL_GetWindowSurface(window);
 
-	//Fill the surface white
-	SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format,
-		0xFF, 0xFF, 0xFF));
+	
+	//Clear screen
+	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+	SDL_RenderClear(renderer);
 
-	//Update the surface
-	SDL_UpdateWindowSurface(window);
+	//Render background texture to screen
+	backgroundTexture.render(0, 0);
+
+	//Render Foo' to the screen
+	playerTexture.render(240, 190);
+
+	//Update screen
+	SDL_RenderPresent(renderer);
 }
 
 void Game::closeGame()
 {
-	//Destroy window
+	//Free loaded images
+	playerTexture.free();
+	backgroundTexture.free();
+
+	//Destroy window	
+	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+	window = NULL;
+	renderer = NULL;
+
 
 	//Quit SDL subsystems
+	IMG_Quit();
 	SDL_Quit();
 	
 }

@@ -1,13 +1,11 @@
 #include "Player.h"
 
-
-
-Player::Player()
+Player::Player(int x, int y) 
 {
-}
+	xPosition = x;
+	yPosition = y;
+	playerTexture = loadFromFile(imagePath);
 
-Player::Player(int x, int y) : xPosition(x), yPosition(y)
-{
 }
 
 

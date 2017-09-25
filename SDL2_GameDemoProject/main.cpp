@@ -1,29 +1,56 @@
 //Using SDL and standard IO
 #include "Game.h"
+#include "Player.h"
 
+SDL_Event e;
 
 int main(int argc, char* args[])
 {
+	// Create game manager 
 	Game gm;
 
+	//create player
+	Player player1(0,0);
+
+	// initialize and create window
 	if (!gm.init()) {
-		printf("Failed to initialize");
+		printf("Unable to initialize!\n");
 	}
-	else {
+	else
+	{
+		// load media
+		if (!gm.loadMedia()) {
+			printf("Unable to load media!\n");
+		}
+		else {
+			// running flag
+			bool running = true;
 
-		gm.createWindow();
+			//Create event handler
+			SDL_Event e;
 
-		
-		//Update the surface
-		gm.updateWindow();
+			//Main game loop
+			while (running) {
 
-		//Wait two seconds
-		SDL_Delay(3000);
-		
-		gm.closeGame();
+				// handle events
+				while (SDL_PollEvent(&e) != 0) {
+
+					//user quits
+					if (e.type == SDL_QUIT) {
+						running = false;
+					}
+					
+				}
+
+				//Update the window
+				gm.updateWindow();
+
+			} // Game loop end
+		}
 	}
 
-	
 
+	// QUIT SDL
+	gm.closeGame();
 	return 0;
 }
