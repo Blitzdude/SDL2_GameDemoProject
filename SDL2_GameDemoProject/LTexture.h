@@ -11,13 +11,13 @@ public:
 	~LTexture();
 
 	//Loads image at specified path
-	SDL_Texture* loadFromFile(std::string path);
+	SDL_Texture* loadFromFile(std::string path, SDL_Renderer* renderer);
 
 	//Deallocates texture
 	void free();
 
 	//Renders texture at given point
-	void render(int x, int y);
+	void render(int x, int y, SDL_Renderer* renderer);
 
 	//Gets image dimensions
 	int getWidth();

@@ -77,12 +77,18 @@ bool Game::loadMedia()
 	bool success = true;
 
 	//Load background texture
-	if (!backgroundTexture.loadFromFile("resources/background.png"))
+	if (!backgroundTexture.loadFromFile("resources/background.png", renderer))
 	{
 		printf("Failed to load background texture image!\n");
 		success = false;
 	}
-	// Player texture is loaded during constructor
+	// load player texture
+	if (!playerTexture.loadFromFile("resources/player.png", renderer))
+	{
+		printf("Failed to load player texture image!\n");
+		success = false;
+	}
+
 	return success;
 }
 
@@ -92,7 +98,7 @@ bool Game::loadMedia(std::string path)
 	bool success = true;
 
 	//Load background texture
-	if (!backgroundTexture.loadFromFile("10_color_keying/background.png"))
+	if (!backgroundTexture.loadFromFile("resources/background.png", renderer))
 	{
 		printf("Failed to load background texture image!\n");
 		success = false;
@@ -104,6 +110,7 @@ bool Game::loadMedia(std::string path)
 
 bool Game::createWindow()
 {
+	bool success = true;
 	//Create window
 	window = SDL_CreateWindow("SDL Tutorial",
 								SDL_WINDOWPOS_UNDEFINED, 
@@ -113,8 +120,17 @@ bool Game::createWindow()
 	if (window == NULL)
 	{
 		printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-		return false;
+		success = false;
 	}	
+	return success;
+}
+
+void Game::processInput()
+{
+	SDL_Event evnt;
+	while (SDL_PollEvent &evnt) {
+
+	}
 }
 
 
@@ -130,19 +146,19 @@ void Game::updateWindow(Player &p)
 	SDL_RenderClear(renderer);
 
 	//Render background texture to screen
-	backgroundTexture.render(0, 0);
+	backgroundTexture.render(0, 0, renderer);
 
 	//Render Foo' to the screen
-	p.render(240, 190);
+	playerTexture.render(p.xPosition, p.yPosition, renderer);
 
 	//Update screen
 	SDL_RenderPresent(renderer);
 }
 
-void Game::closeGame(Player* player)
+void Game::closeGame()
 {
 	//Free loaded images
-	player->free();
+	playerTexture.free();
 	backgroundTexture.free();
 
 	//Destroy window	

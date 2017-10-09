@@ -18,6 +18,10 @@ public:
 
 	//Scene texture
 	LTexture backgroundTexture;
+	LTexture playerTexture;
+	
+	//Renderer
+	SDL_Renderer* renderer;
 
 	Game(); // constructor
 	~Game(); // destructor
@@ -27,8 +31,9 @@ public:
 	bool loadMedia();
 	bool loadMedia(std::string path);
 	bool createWindow();
+	void processInput();
 	
 	void updateWindow(Player &p);
-	void closeGame(Player* player);
+	void closeGame();
 };
 

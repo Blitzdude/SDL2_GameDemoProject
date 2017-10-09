@@ -55,6 +55,6 @@ int main(int argc, char* args[])
 
 
 	// QUIT SDL
-	gm.closeGame(&player1);
+	gm.closeGame();
 	return 0;
 }
